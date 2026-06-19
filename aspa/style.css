@@ -1,0 +1,291 @@
+/* =============================
+   MEDISHORT360 - REGLA DEL ASPA
+   ============================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:       #0a0e1c;
+  --card:     #101830;
+  --card2:    #0d1428;
+  --blue:     #1976d2;
+  --blt:      #42a5f5;
+  --cyan:     #00cae0;
+  --gold:     #c8a614;
+  --gold2:    #e6c52a;
+  --red:      #c41230;
+  --white:    #f0f4ff;
+  --muted:    #7a8aac;
+  --border:   #1e2d50;
+  --font:     'Sora', 'Segoe UI', sans-serif;
+  --mono:     'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font);
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+/* ── Particles ── */
+#particles {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--blt);
+  animation: twinkle var(--dur, 2.5s) var(--del, 0s) infinite alternate;
+}
+@keyframes twinkle { from { opacity: 0.04 } to { opacity: 0.5 } }
+
+/* ── Layout ── */
+#root {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px 16px 40px;
+  min-height: 100vh;
+}
+
+.app { width: 100%; max-width: 480px; }
+
+/* ── Install banner ── */
+#install-btn {
+  position: fixed; top: 16px; left: 16px; z-index: 200;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  border: none; border-radius: 24px;
+  padding: 10px 18px; cursor: pointer;
+  color: #fff; font-weight: 700; font-size: 13px;
+  font-family: var(--font);
+  box-shadow: 0 0 20px #1976d266;
+  animation: pulse-ring 2.5s ease-out infinite;
+  display: none;
+}
+#install-btn.visible { display: block; }
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 28px; }
+
+.badge-row {
+  display: flex; justify-content: center; gap: 6px;
+  flex-wrap: wrap; margin-bottom: 14px;
+}
+.badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px;
+  background: #1976d220; border: 1px solid #1976d266;
+  color: var(--blt); border-radius: 20px;
+  padding: 3px 9px;
+}
+
+/* ── Animated Logo ── */
+.logo-wrap {
+  position: relative; display: inline-block;
+  margin-bottom: 16px;
+}
+.logo-ring-spin {
+  position: absolute; inset: -6px; border-radius: 50%;
+  background: conic-gradient(var(--blue), var(--cyan), #fff, var(--gold2), var(--blue));
+  animation: spin-slow 5s linear infinite;
+  opacity: 0.9;
+}
+.logo-ring-pulse {
+  position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--blt);
+  animation: pulse-ring 2.2s ease-out infinite;
+}
+.logo-img {
+  width: 108px; height: 108px; border-radius: 50%;
+  object-fit: cover; position: relative; display: block;
+  border: 3px solid var(--bg);
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes spin-slow { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+@keyframes pulse-ring {
+  0%  { opacity: 0.7; transform: scale(1)    }
+  100%{ opacity: 0;   transform: scale(1.38) }
+}
+@keyframes float {
+  0%,100% { transform: translateY(0)   }
+  50%     { transform: translateY(-8px) }
+}
+
+.app-title {
+  font-size: 22px; font-weight: 700;
+  color: var(--white);
+  text-shadow: 0 0 22px #1976d266;
+  margin-bottom: 4px;
+}
+.app-sub   { font-size: 12px; color: var(--blt); margin-bottom: 4px; }
+.app-brand { font-size: 11px; color: var(--muted); }
+
+/* ── Tabs ── */
+.tabs {
+  display: flex; gap: 6px;
+  background: var(--card); border-radius: 12px;
+  padding: 4px; border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1; padding: 9px 4px;
+  border: none; border-radius: 9px;
+  font-family: var(--font); font-size: 12px;
+  cursor: pointer; transition: all 0.2s;
+  background: transparent; color: var(--muted);
+}
+.tab-btn.active {
+  color: #fff; font-weight: 700;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--card2); border-radius: 16px;
+  padding: 20px; margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+.card-label {
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted);
+  margin-bottom: 14px;
+}
+
+/* ── Toggle pills ── */
+.pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.pill-sub { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+.pill-btn {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; cursor: pointer; transition: all 0.15s;
+  font-family: var(--font);
+}
+
+/* ── Number inputs ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.input-wrap { display: flex; flex-direction: column; gap: 4px; }
+.input-label {
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--muted);
+}
+.input-row {
+  display: flex; align-items: center;
+  background: var(--card); border-radius: 8px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.input-row input {
+  background: transparent; border: none;
+  color: var(--white); font-size: 18px;
+  font-family: var(--mono); padding: 10px 12px;
+  width: 100%; outline: none;
+}
+.input-unit { padding-right: 12px; font-size: 13px; color: var(--muted); }
+
+.text-input {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--white);
+  padding: 8px 10px; font-size: 13px;
+  font-family: var(--font); outline: none; width: 100%;
+}
+
+/* ── Volume buttons ── */
+.vol-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.vol-btn {
+  flex: 1; min-width: 44px; padding: 9px 4px;
+  border: none; border-radius: 8px;
+  font-size: 12px; cursor: pointer;
+  transition: all 0.15s; font-family: var(--font);
+}
+
+/* ── Error box ── */
+.error-box {
+  background: #2d001a; border: 1px solid var(--red);
+  border-radius: 12px; padding: 12px 16px;
+  margin-bottom: 14px; color: #fca5a5; font-size: 13px;
+}
+
+/* ── Result card ── */
+.result-card {
+  background: var(--bg); border-radius: 16px;
+  border: 1.5px solid; overflow: hidden;
+  margin-bottom: 14px;
+}
+.result-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.result-body { padding: 20px; }
+
+/* ── Aspa diagram ── */
+.aspa-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.aspa-cell { text-align: center; }
+.aspa-pct  { font-size: 20px; font-weight: 700; font-family: var(--mono); }
+.aspa-name { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.aspa-parts{ font-size: 10px; color: var(--muted); }
+.aspa-pval { font-size: 15px; font-weight: 600; font-family: var(--mono); color: var(--white); }
+.aspa-total { text-align: center; font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* ── Volume result blocks ── */
+.vol-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.vol-block {
+  background: var(--card2); border-radius: 12px;
+  padding: 14px 16px; border-left: 3px solid;
+}
+.vol-block-label { font-size: 10px; margin-bottom: 4px; color: var(--muted); }
+.vol-block-val { font-size: 24px; font-weight: 700; font-family: var(--mono); }
+.vol-block-val span { font-size: 12px; font-weight: 400; }
+.vol-bar-bg { margin-top: 8px; background: var(--bg); border-radius: 6px; height: 6px; overflow: hidden; }
+.vol-bar    { height: 100%; border-radius: 6px; transition: width 0.4s; }
+.vol-pct    { font-size: 10px; margin-top: 4px; color: var(--muted); }
+
+/* ── Ampolla block ── */
+.amp-block {
+  margin-top: 12px; border-radius: 10px;
+  padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;
+}
+.amp-icon { font-size: 20px; margin-top: 2px; }
+.amp-title { font-size: 14px; font-weight: 700; font-family: var(--mono); }
+.amp-sub   { font-size: 11px; margin-top: 2px; color: var(--muted); }
+
+/* ── Verificacion ── */
+.verif-row {
+  margin-top: 12px; background: var(--card2);
+  border-radius: 10px; padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.verif-label { font-size: 12px; color: var(--muted); }
+.verif-val   { font-size: 13px; font-family: var(--mono); color: var(--white); }
+
+/* ── Steps card ── */
+.steps-card {
+  border-radius: 16px; padding: 18px 20px;
+  margin-bottom: 16px; border: 2px solid;
+}
+.steps-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 16px;
+}
+.steps-list { display: flex; flex-direction: column; gap: 12px; }
+.step-row   { display: flex; gap: 12px; align-items: flex-start; }
+.step-num {
+  min-width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text {
+  font-size: 14px; font-weight: 500; line-height: 1.6;
+  color: var(--white);
+}
+
+/* ── Footer ── */
+.footer { text-align: center; margin-top: 8px; }
+.footer p { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.footer strong { color: var(--red); font-size: 11px; }

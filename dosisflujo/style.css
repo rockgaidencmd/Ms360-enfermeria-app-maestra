@@ -1,0 +1,255 @@
+/* ========================================
+   MEDISHORT360 - DOSIS EN mL  v2
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:      #040c1f;
+  --card:    #0b1a30;
+  --card2:   #071220;
+  --blue:    #1976d2;
+  --blt:     #42a5f5;
+  --cyan:    #00cae0;
+  --white:   #e8f4fd;
+  --muted:   #5a7a9b;
+  --border:  #132444;
+  --font:    'Sora','Segoe UI',sans-serif;
+  --mono:    'DM Mono',monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font);
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+/* ── Partículas ── */
+#particles { position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden; }
+.particle  {
+  position:absolute;border-radius:50%;background:var(--blt);
+  animation:twinkle var(--dur,2.5s) var(--del,0s) infinite alternate;
+}
+@keyframes twinkle { from{opacity:.03} to{opacity:.28} }
+
+/* ── Layout ── */
+#root {
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 14px 40px;min-height:100vh;
+}
+.app { width:100%;max-width:460px; }
+
+/* ── Botón instalar ── */
+#install-btn {
+  position:fixed;top:14px;left:14px;z-index:200;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  border:none;border-radius:24px;padding:9px 16px;
+  cursor:pointer;color:#fff;font-weight:700;font-size:13px;
+  font-family:var(--font);box-shadow:0 0 18px #1976d233;
+  animation:pulse-ring 2.5s ease-out infinite;display:none;
+}
+#install-btn.visible{display:block;}
+
+/* ── Header ── */
+.header{text-align:center;margin-bottom:24px;}
+
+.badge-row{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.badge{
+  font-size:10px;font-weight:700;letter-spacing:.8px;
+  background:#1976d218;border:1px solid #1976d255;
+  color:var(--blt);border-radius:20px;padding:3px 9px;
+}
+
+/* ── Logo animado (anillo suave) ── */
+.logo-wrap{position:relative;display:inline-block;margin-bottom:14px;}
+.logo-ring-spin{
+  position:absolute;inset:-5px;border-radius:50%;
+  background:conic-gradient(var(--blue),var(--cyan),#fff,var(--blt),var(--blue));
+  animation:spin-slow 6s linear infinite;
+  opacity:.28;
+}
+.logo-ring-pulse{
+  position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid var(--blt);
+  animation:pulse-ring 2.8s ease-out infinite;opacity:.55;
+}
+.logo-img{
+  width:104px;height:104px;border-radius:50%;
+  object-fit:cover;position:relative;display:block;
+  border:2px solid var(--bg);
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse-ring{0%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.36)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+.app-title{font-size:21px;font-weight:700;color:var(--white);text-shadow:0 0 18px #1976d255;margin-bottom:3px;}
+.app-sub  {font-size:12px;color:var(--blt);margin-bottom:3px;}
+.app-brand{font-size:11px;color:var(--muted);}
+
+/* ── Cards ── */
+.card{
+  background:var(--card2);border-radius:16px;
+  padding:18px 16px;margin-bottom:12px;
+  border:1px solid var(--border);
+}
+.card-label{
+  font-size:10px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--muted);margin-bottom:12px;
+}
+
+/* ── Inputs ── */
+.input-block{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.input-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+
+/* INPUT ROW — siempre horizontal, sin overflow raro */
+.irow{
+  display:flex;align-items:center;
+  background:var(--card);border-radius:10px;
+  border:1px solid var(--border);
+  overflow:hidden;width:100%;
+}
+.irow input{
+  background:transparent;border:none;color:var(--white);
+  font-size:17px;font-family:var(--mono);
+  padding:11px 12px;flex:1;min-width:0;outline:none;
+}
+.irow input[type=text]{font-size:14px;font-family:var(--font);}
+.irow input::placeholder{color:var(--muted);opacity:.7;}
+.iunit{
+  padding:0 12px 0 4px;font-size:13px;color:var(--blt);
+  white-space:nowrap;flex-shrink:0;
+}
+.iselect{
+  background:transparent;border:none;border-left:1px solid var(--border);
+  color:var(--blt);font-size:13px;font-family:var(--font);
+  padding:0 8px;height:100%;cursor:pointer;outline:none;
+  flex-shrink:0;
+}
+.iselect option{background:#0b1a30;color:var(--white);}
+
+/* Contenido + Volumen: SIEMPRE en columna en móvil */
+.conc-vol{display:flex;flex-direction:column;gap:10px;}
+
+/* ── Tipo toggle ── */
+.tipo-row{display:flex;gap:8px;margin-bottom:14px;}
+.tipo-btn{
+  flex:1;padding:11px 6px;border-radius:12px;
+  border:1.5px solid var(--border);background:transparent;
+  color:var(--muted);font-family:var(--font);font-size:12px;
+  cursor:pointer;transition:all .2s;text-align:center;line-height:1.4;
+}
+.tipo-btn.active{color:#fff;font-weight:700;}
+.tipo-icon{font-size:18px;display:block;margin-bottom:3px;}
+
+/* ── Presets ── */
+.presets-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.preset-btn{
+  padding:5px 11px;border-radius:20px;font-size:11px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--muted);cursor:pointer;font-family:var(--font);transition:all .15s;
+}
+.preset-btn:hover{border-color:var(--blt);color:var(--blt);background:#1976d215;}
+
+/* ── Divider ── */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  color:var(--muted);font-size:11px;margin:12px 0 0;
+}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+
+/* ── Helper text ── */
+.helper-text{
+  font-size:11px;color:var(--muted);margin-top:8px;
+  padding:7px 12px;background:var(--card);
+  border-radius:8px;border-left:2px solid var(--blue);
+  line-height:1.6;
+}
+
+/* ── Error / Aviso ── */
+.error-box{background:#1a0414;border:1px solid #c41230;border-radius:12px;padding:12px 14px;margin-bottom:12px;color:#fca5a5;font-size:13px;}
+.warn-box {background:#1a1400;border:1px solid #f59e0b;border-radius:12px;padding:12px 14px;margin-bottom:12px;color:#fcd34d;font-size:13px;}
+
+/* ── Resultado ── */
+.result-card{
+  background:var(--bg);border-radius:16px;
+  border:1.5px solid;overflow:hidden;margin-bottom:12px;
+}
+.result-header{padding:16px;border-bottom:1px solid var(--border);}
+.result-body  {padding:16px;}
+
+/* Regla de 3 */
+.r3-box{
+  background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;
+}
+.r3-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:12px;}
+.r3-row{
+  display:flex;align-items:center;gap:0;
+  padding:5px 0;font-family:var(--mono);font-size:14px;
+}
+.r3-row.dim   {color:var(--muted);}
+.r3-row.bright{color:var(--cyan);font-weight:700;font-size:15px;}
+.r3-label {width:28px;font-size:11px;color:var(--muted);flex-shrink:0;}
+.r3-amt   {flex:1;}
+.r3-dash  {padding:0 8px;color:var(--border);font-size:16px;}
+.r3-vol   {width:60px;text-align:right;}
+.r3-sep   {border:none;border-top:1px dashed var(--border);margin:6px 0;}
+.r3-formula{
+  margin-top:12px;font-size:12px;color:var(--muted);
+  text-align:center;line-height:1.8;
+  background:var(--bg);border-radius:8px;padding:10px;
+}
+.r3-formula strong{color:var(--blt);}
+
+/* Número resultado GRANDE */
+.res-main{text-align:center;padding:16px 0 8px;}
+.res-num{
+  font-size:62px;font-weight:700;font-family:var(--mono);
+  line-height:1;letter-spacing:-2px;
+  display:inline-flex;align-items:baseline;gap:6px;
+}
+.res-unit{font-size:22px;font-weight:400;font-family:var(--font);}
+.res-desc{font-size:12px;color:var(--muted);margin-top:8px;}
+
+/* Barra */
+.bar-wrap{margin:12px 0 0;background:var(--card2);border-radius:8px;height:8px;overflow:hidden;border:1px solid var(--border);}
+.bar-fill{height:100%;border-radius:8px;transition:width .5s;}
+.bar-txt {font-size:10px;color:var(--muted);margin-top:4px;}
+
+/* Aviso multi-vial */
+.vial-warn{
+  background:#0d1f35;border:1px solid var(--blue);
+  border-radius:10px;padding:10px 14px;
+  display:flex;align-items:flex-start;gap:10px;margin-top:12px;
+}
+.vial-warn-icon{font-size:18px;}
+.vial-warn-text{font-size:12px;color:var(--blt);line-height:1.5;}
+.vial-warn-text strong{color:var(--white);}
+
+/* ── Steps ── */
+.steps-card{
+  border-radius:16px;padding:16px;margin-bottom:14px;border:2px solid;
+}
+.steps-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:14px;
+}
+.steps-list{display:flex;flex-direction:column;gap:11px;}
+.step-row  {display:flex;gap:12px;align-items:flex-start;}
+.step-num  {
+  min-width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px;
+}
+.step-text {font-size:13px;font-weight:500;line-height:1.6;color:var(--white);}
+
+/* ── Footer ── */
+.footer{text-align:center;margin-top:8px;}
+.footer p{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.footer strong{color:var(--blt);font-size:11px;}

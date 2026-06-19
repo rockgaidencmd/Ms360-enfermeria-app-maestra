@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0f1d" />
+  <title>MS360 Enfermería</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./menu.css" />
+</head>
+<body>
+
+  <main class="menu" id="menu">
+
+    <header class="brand">
+      <div class="brand-mark">
+        <span class="brand-pulse"></span>
+        <span class="brand-icon">🩺</span>
+      </div>
+      <h1 class="brand-title">MS360 <span>Enfermería</span></h1>
+      <p class="brand-sub">Calculadoras clínicas · MEDISHORT360</p>
+    </header>
+
+    <section class="grid" aria-label="Calculadoras disponibles">
+
+      <!-- GRATIS: Porcentaje -->
+      <button class="tool" data-app="porcentaje" style="--c:#1976d2">
+        <span class="tool-icon">💉</span>
+        <span class="tool-body">
+          <span class="tool-name">Conversión de %</span>
+          <span class="tool-desc">Porcentaje a mg/mL y dosis</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- GRATIS: Dosis y Flujo -->
+      <button class="tool" data-app="dosisflujo" style="--c:#00cae0">
+        <span class="tool-icon">💧</span>
+        <span class="tool-body">
+          <span class="tool-name">Dosis y Goteo</span>
+          <span class="tool-desc">Dosis en mL · goteo · flujo IV</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- PREMIUM: ASPA -->
+      <button class="tool locked" data-app="aspa" data-premium="1" style="--c:#42a5f5">
+        <span class="tool-icon">⚗️</span>
+        <span class="tool-body">
+          <span class="tool-name">Regla del Aspa <span class="badge-pro">PRO</span></span>
+          <span class="tool-desc">Diluciones por concentración</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- PREMIUM: UCI -->
+      <button class="tool locked" data-app="uci" data-premium="1" style="--c:#5e9be6">
+        <span class="tool-icon">🫀</span>
+        <span class="tool-body">
+          <span class="tool-name">UCI: Balance + Antropometría <span class="badge-pro">PRO</span></span>
+          <span class="tool-desc">Balance hídrico y cálculos antropométricos</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+    </section>
+
+    <footer class="menu-foot">
+      <button class="foot-link" id="open-privacy">Política de privacidad</button>
+      <span class="foot-sep">·</span>
+      <button class="foot-link" id="open-about">Acerca de</button>
+      <p class="foot-disclaimer">Herramienta de apoyo. No sustituye el criterio clínico profesional.</p>
+    </footer>
+
+  </main>
+
+  <!-- VISTA DE CALCULADORA (iframe aislado) -->
+  <section class="viewer" id="viewer" hidden>
+    <header class="viewer-bar">
+      <button class="back-btn" id="back-btn">‹ Inicio</button>
+      <span class="viewer-title" id="viewer-title">—</span>
+      <span class="viewer-spacer"></span>
+    </header>
+    <iframe class="viewer-frame" id="viewer-frame" title="Calculadora" referrerpolicy="no-referrer"></iframe>
+  </section>
+
+  <script src="./menu.js"></script>
+</body>
+</html>
