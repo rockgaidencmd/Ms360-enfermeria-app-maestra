@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0f1e" />
+  <meta name="description" content="Conversor de concentraciones % a gramos - MediShort360" />
+  <title>MediShort360 · Conversor %→g</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icono-192.png" />
+  <link rel="apple-touch-icon" href="icono-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ═══ ESTILOS DEL GATE DE ACTIVACIÓN ═══ -->
+  <style>
+    #activation-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(160deg, #0a0f1e 0%, #0d1530 60%, #0a1628 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      animation: gateFadeIn 0.4s ease;
+    }
+
+    @keyframes gateFadeIn {
+      from { opacity: 0; transform: scale(1.02); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes gateFadeOut {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(0.97); }
+    }
+
+    .gate-box {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,229,255,0.18);
+      border-radius: 20px;
+      padding: 36px 28px 32px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0,229,255,0.08), 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .gate-logo {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      display: block;
+      filter: drop-shadow(0 0 12px rgba(0,229,255,0.4));
+    }
+
+    .gate-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #00e5ff;
+      letter-spacing: 2px;
+      margin: 0 0 4px;
+      text-transform: uppercase;
+    }
+
+    .gate-subtitle {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.45);
+      margin: 0 0 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .gate-label {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    #gate-input {
+      width: 100%;
+      background: rgba(0,229,255,0.07);
+      border: 1.5px solid rgba(0,229,255,0.35);
+      border-radius: 10px;
+      color: #00e5ff;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.25rem;
+      letter-spacing: 4px;
+      text-align: center;
+      padding: 14px 16px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #gate-input:focus {
+      border-color: #00e5ff;
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.15);
+    }
+
+    #gate-input::placeholder {
+      color: rgba(0,229,255,0.25);
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+    }
+
+    @keyframes gateShake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-6px); }
+      40%     { transform: translateX(6px); }
+      60%     { transform: translateX(-4px); }
+      80%     { transform: translateX(4px); }
+    }
+    #gate-input.shake {
+      animation: gateShake 0.4s ease;
+      border-color: #ff4d6d;
+      box-shadow: 0 0 0 3px rgba(255,77,109,0.15);
+    }
+
+    #gate-error {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.78rem;
+      color: #ff4d6d;
+      margin: 8px 0 0;
+      min-height: 18px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    #gate-error.visible { opacity: 1; }
+
+    #gate-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background: linear-gradient(135deg, #0077b6, #00e5ff);
+      border: none;
+      border-radius: 10px;
+      color: #0a0f1e;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    #gate-btn:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    #gate-btn:active:not(:disabled) { transform: translateY(0); }
+    #gate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .gate-footer {
+      margin-top: 20px;
+      font-family: 'Exo 2', sans-serif;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.25);
+      line-height: 1.5;
+    }
+
+    /* ── NUEVOS ESTILOS: Calculadora de Dosis ── */
+    .field-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300e5ff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .field-select option {
+      background: #0d1530;
+      color: #e0f7ff;
+    }
+
+    .dosis-big-val {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #00e5ff;
+      text-align: center;
+      padding: 8px 0 4px;
+      letter-spacing: 1px;
+    }
+    .dosis-big-val.warn { color: #ff4d6d; }
+
+    .dosis-mini-label {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+    }
+
+    .dosis-ampollas {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #a78bfa;
+      text-align: center;
+      padding: 4px 0 8px;
+    }
+
+    .aviso-warn {
+      border-color: rgba(255,77,109,0.35) !important;
+      background: rgba(255,77,109,0.07) !important;
+    }
+    .aviso-warn .aviso-icon { color: #ff4d6d; }
+
+    .paso-warn {
+      color: #ff4d6d !important;
+      font-weight: 600;
+    }
+
+    /* Propofol card color */
+    .quick-card.propofol .qc-conc { color: #a78bfa; }
+    .quick-card.propofol { border-color: rgba(167,139,250,0.25); }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ APP ══════════════ -->
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-nav">
+      <button class="nav-pill active" onclick="showSection('aprende')">📘 Aprende</button>
+      <button class="nav-pill" onclick="showSection('calculadora')">🧮 Calcula</button>
+      <button class="nav-pill" onclick="showSection('dosis'); initDosisSection()">Dosis</button>
+      <button class="nav-pill" onclick="showSection('ejemplos')">✏️ Practica</button>
+      <button class="nav-pill" onclick="showSection('manual')">Manual</button>
+    </div>
+
+    <div class="logo-wrap">
+      <img src="icono-512.png" alt="MediShort360 Logo" class="logo-float" />
+    </div>
+
+    <h1 class="app-title">Conversor %→g</h1>
+    <p class="app-subtitle">Convierte concentraciones (%) a gramos en un volumen dado</p>
+    <p class="app-canal">📺 Canal MEDISHORT360</p>
+
+  </header>
+
+  <!-- ============ SECCIÓN CALCULADORA ============ -->
+  <!-- ============ SECCIÓN APRENDE (mini-clase) ============ -->
+  <main id="sec-aprende" class="section active">
+
+    <div class="card">
+      <div class="card-label">📘 MINI-CLASE — CONVERSIÓN DE PORCENTAJE</div>
+      <p class="card-desc">Aprende a convertir la concentración en % de una solución a miligramos y gramos. Lee el ejemplo y luego practica en un entorno seguro.</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">1️⃣ ¿QUÉ SIGNIFICA EL PORCENTAJE?</div>
+      <div class="formula-line">El porcentaje (%) de una solución indica cuántos <strong>gramos</strong> de soluto hay en <strong>100 mL</strong> de solución.</div>
+      <div class="formula-line" style="margin-top:8px"><span class="mono">Una solución al 20% = 20 g en 100 mL</span></div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">2️⃣ LA FÓRMULA, PASO A PASO</div>
+      <div class="formula-line"><span class="mono">mg/mL = (% × 1000) ÷ 100</span></div>
+      <div class="formula-line"><span class="mono">mg totales = mg/mL × volumen (mL)</span></div>
+      <div class="formula-line"><span class="mono">g totales = mg totales ÷ 1000</span></div>
+    </div>
+
+    <div class="formula-box ejemplo-box">
+      <div class="formula-title">3️⃣ EJEMPLO RESUELTO — Sulfato de Magnesio 20% en 10 mL</div>
+      <div class="formula-line"><strong>Paso 1.</strong> 20% significa 20 g por cada 100 mL.</div>
+      <div class="formula-line"><strong>Paso 2.</strong> Convertimos a mg/mL:<br/><span class="mono">(20 × 1000) ÷ 100 = <span class="cyan">200 mg/mL</span></span></div>
+      <div class="formula-line"><strong>Paso 3.</strong> Multiplicamos por el volumen:<br/><span class="mono">200 mg/mL × 10 mL = <span class="cyan">2000 mg</span></span></div>
+      <div class="formula-line"><strong>Paso 4.</strong> Pasamos a gramos:<br/><span class="mono">2000 mg ÷ 1000 = <span class="cyan">2 g</span></span></div>
+      <div class="formula-line res-line">✅ Una ampolla de Sulfato de Magnesio 20% de 10 mL contiene <strong>2 g</strong>.</div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">💡 PARA RECORDAR</div>
+      <div class="formula-line">El total siempre depende del <strong>volumen real</strong> de la presentación que tienes. Una misma concentración (%) da distinta cantidad total según los mL.</div>
+    </div>
+
+    <div class="aviso-card">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-text">
+        <strong>Herramienta educativa.</strong> Este contenido es para aprendizaje y práctica. Verifica siempre la prescripción, los protocolos de tu institución y la presentación comercial antes de cualquier administración real. Consulta a un profesional de la salud para decisiones clínicas.
+      </div>
+    </div>
+
+    <button class="btn-calc" onclick="showSection('ejemplos')" style="margin-top:4px">✏️ Ahora practica con ejercicios →</button>
+
+  </main>
+
+  <main id="sec-calculadora" class="section hidden">
+
+    <div class="card">
+      <div class="card-label">⚡ ACCESO RÁPIDO — MEDICAMENTOS FRECUENTES</div>
+      <div class="quick-grid">
+        <button class="quick-card" onclick="cargarMed('Sulfato de Magnesio', 20, 10)">
+          <span class="qc-name">Sulfato de Magnesio</span>
+          <span class="qc-conc">20%</span>
+          <span class="qc-vol">10 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Gluconato de Calcio', 10, 10)">
+          <span class="qc-name">Gluconato de Calcio</span>
+          <span class="qc-conc">10%</span>
+          <span class="qc-vol">10 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Bicarbonato de Sodio', 8.4, 10)">
+          <span class="qc-name">Bicarbonato de Sodio</span>
+          <span class="qc-conc">8.4%</span>
+          <span class="qc-vol">10 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Cloruro de Sodio', 20, 10)">
+          <span class="qc-name">Cloruro de Sodio</span>
+          <span class="qc-conc">20%</span>
+          <span class="qc-vol">10 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Cloruro de Potasio', 20, 10)">
+          <span class="qc-name">Cloruro de Potasio</span>
+          <span class="qc-conc">20%</span>
+          <span class="qc-vol">10 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Cloruro de Sodio 0.9%', 0.9, 1000)">
+          <span class="qc-name">Cloruro de Sodio</span>
+          <span class="qc-conc">0.9%</span>
+          <span class="qc-vol">1000 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Dextrosa', 5, 1000)">
+          <span class="qc-name">Dextrosa</span>
+          <span class="qc-conc">5%</span>
+          <span class="qc-vol">1000 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Dextrosa', 10, 1000)">
+          <span class="qc-name">Dextrosa</span>
+          <span class="qc-conc">10%</span>
+          <span class="qc-vol">1000 mL</span>
+        </button>
+        <button class="quick-card" onclick="cargarMed('Dextrosa', 50, 500)">
+          <span class="qc-name">Dextrosa</span>
+          <span class="qc-conc">50%</span>
+          <span class="qc-vol">500 mL</span>
+        </button>
+        <button class="quick-card epinefrina" onclick="cargarMed('Epinefrina Racémica', 2.25, 0.5)">
+          <span class="qc-name">Epinefrina Racémica</span>
+          <span class="qc-conc">2.25%</span>
+          <span class="qc-vol">0.5 mL</span>
+        </button>
+        <button class="quick-card propofol" onclick="cargarMed('Propofol 1%', 1, 20)">
+          <span class="qc-name">Propofol</span>
+          <span class="qc-conc">1%</span>
+          <span class="qc-vol">20 mL</span>
+        </button>
+        <button class="quick-card propofol" onclick="cargarMed('Propofol 2%', 2, 20)">
+          <span class="qc-name">Propofol</span>
+          <span class="qc-conc">2%</span>
+          <span class="qc-vol">20 mL</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ENTRADA MANUAL -->
+    <div class="card">
+      <div class="card-label">📋 INGRESAR MEDICAMENTO</div>
+
+      <div class="field-group">
+        <label class="field-label">NOMBRE DEL MEDICAMENTO (OPCIONAL)</label>
+        <input type="text" id="inputNombre" class="field-input" placeholder="Ej: Gluconato de Calcio, Dextrosa..." />
+      </div>
+
+      <div class="field-row">
+        <div class="field-group half">
+          <label class="field-label">CONCENTRACIÓN (%)</label>
+          <div class="input-with-unit">
+            <input type="number" id="inputConc" class="field-input" placeholder="Ej: 10" step="any" min="0" max="100" />
+            <span class="unit-badge">%</span>
+          </div>
+        </div>
+        <div class="field-group half">
+          <label class="field-label">VOLUMEN (mL)</label>
+          <div class="input-with-unit">
+            <input type="number" id="inputVol" class="field-input" placeholder="Ej: 10" step="any" min="0" />
+            <span class="unit-badge">mL</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-calcular" onclick="calcular()">
+        ⚗️ CALCULAR
+      </button>
+    </div>
+
+    <!-- RESULTADO -->
+    <div id="resultado" class="card resultado-card hidden">
+      <div class="res-header">
+        <span class="res-med-name" id="resNombre">—</span>
+        <span class="res-badge" id="resConc">—%</span>
+        <span class="res-badge cyan" id="resVol">— mL</span>
+      </div>
+
+      <div class="paso-card">
+        <div class="paso-title">📐 CONVERSIÓN PASO A PASO</div>
+        <div class="paso-body" id="pasoAPaso"></div>
+      </div>
+
+      <div class="res-final">
+        <div class="res-label">RESULTADO FINAL</div>
+        <div class="res-big" id="resBig">—</div>
+        <div class="res-grid">
+          <div class="res-item">
+            <span class="ri-label">mg/mL</span>
+            <span class="ri-val" id="resMgMl">—</span>
+          </div>
+          <div class="res-item">
+            <span class="ri-label">mg totales</span>
+            <span class="ri-val" id="resMgTotal">—</span>
+          </div>
+          <div class="res-item">
+            <span class="ri-label">g totales</span>
+            <span class="ri-val" id="resGTotal">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="barra-wrap">
+        <div class="barra-track">
+          <div class="barra-fill" id="barraFill"></div>
+        </div>
+        <div class="barra-labels">
+          <span>0%</span>
+          <span id="barraLabel">—</span>
+          <span>100%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="aviso-card">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-text">
+        <strong>Herramienta educativa.</strong> Siempre verificar la prescripción médica, protocolos institucionales y presentación comercial antes de administrar medicamentos.
+      </div>
+    </div>
+
+    <div class="nota-final">
+      <strong>Importante:</strong> el contenido total depende de los mL de la presentación.
+    </div>
+
+  </main>
+
+  <!-- ============ SECCIÓN DOSIS ============ -->
+  <main id="sec-dosis" class="section hidden">
+
+    <div class="card">
+      <div class="card-label">💉 ¿CUÁNTO ADMINISTRAR?</div>
+      <p class="card-desc">Selecciona el medicamento, elige la presentación disponible, ingresa la dosis ordenada y obtén los mL y ampollas necesarias.</p>
+
+      <div class="field-group">
+        <label class="field-label">MEDICAMENTO</label>
+        <select id="dosisSelectMed" class="field-input field-select" onchange="onDosisSelectChange()">
+          <!-- llenado por JS -->
+        </select>
+      </div>
+
+      <!-- Presentación (selector) -->
+      <div id="dosisPresRow" class="field-group hidden">
+        <label class="field-label">PRESENTACIÓN DISPONIBLE</label>
+        <select id="dosisSelectPres" class="field-input field-select">
+          <!-- llenado por JS -->
+        </select>
+      </div>
+
+      <!-- Manual -->
+      <div id="dosisManualRow" class="field-row hidden">
+        <div class="field-group half">
+          <label class="field-label">CONCENTRACIÓN (%)</label>
+          <div class="input-with-unit">
+            <input type="number" id="dosisManualConc" class="field-input" placeholder="Ej: 1" step="any" min="0" max="100" />
+            <span class="unit-badge">%</span>
+          </div>
+        </div>
+        <div class="field-group half">
+          <label class="field-label">VOL. AMPOLLA (mL)</label>
+          <div class="input-with-unit">
+            <input type="number" id="dosisManualVol" class="field-input" placeholder="Ej: 20" step="any" min="0" />
+            <span class="unit-badge">mL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dosis ordenada -->
+      <div class="field-group">
+        <label class="field-label">DOSIS ORDENADA</label>
+        <div class="input-with-unit">
+          <input type="number" id="dosisInputDosis" class="field-input" placeholder="Ej: 50" step="any" min="0" />
+          <span class="unit-badge" id="dosisUnidadLabel">mg</span>
+        </div>
+        <input type="hidden" id="dosisInputUnidad" value="mg" />
+      </div>
+
+      <button class="btn-calcular" onclick="calcularDosis()">
+        💉 CALCULAR DOSIS
+      </button>
+    </div>
+
+    <!-- RESULTADO DOSIS -->
+    <div id="dosisResultado" class="card resultado-card hidden">
+
+      <div class="res-header">
+        <span class="res-med-name" id="dosisResMed">—</span>
+        <span class="res-badge" id="dosisResConc">—</span>
+      </div>
+
+      <div class="paso-card">
+        <div class="paso-title">📐 CÁLCULO PASO A PASO</div>
+        <div class="paso-body" id="dosisPasoAPaso"></div>
+      </div>
+
+      <div class="res-final">
+        <div class="res-label">DOSIS ORDENADA</div>
+        <div class="dosis-mini-label" id="dosisResDosis">—</div>
+        <div class="res-label" style="margin-top:12px">ADMINISTRAR</div>
+        <div class="dosis-big-val" id="dosisResMl">— mL</div>
+        <div class="dosis-ampollas" id="dosisResAmpollas">—</div>
+      </div>
+
+      <div id="dosisAvisoExcede" class="aviso-card aviso-warn hidden">
+        <div class="aviso-icon">⚠️</div>
+        <div class="aviso-text">
+          <strong>La dosis requiere más de una ampolla.</strong> Verifica la prescripción y la presentación disponible.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="aviso-card">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-text">
+        <strong>Herramienta educativa.</strong> Siempre verificar la prescripción médica y protocolos institucionales antes de administrar.
+      </div>
+    </div>
+
+    <div class="nota-final">
+      <strong>Importante:</strong> el contenido total depende de los mL de la presentación.
+    </div>
+
+  </main>
+
+  <!-- ============ SECCIÓN EJEMPLOS ============ -->
+  <main id="sec-ejemplos" class="section hidden">
+    <div class="card">
+      <div class="card-label">📚 EJEMPLOS PRECARGADOS</div>
+      <p class="card-desc">Toca cualquier ejemplo para verlo calculado paso a paso.</p>
+    </div>
+
+    <div id="ejemplosGrid" class="ejemplos-lista"></div>
+
+    <div class="aviso-card">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-text">
+        <strong>Herramienta educativa.</strong> Siempre verificar la prescripción médica, protocolos institucionales y presentación comercial antes de administrar medicamentos.
+      </div>
+    </div>
+    <div class="nota-final">
+      <strong>Importante:</strong> el contenido total depende de los mL de la presentación.
+    </div>
+  </main>
+
+  <!-- ============ SECCIÓN MANUAL ============ -->
+  <main id="sec-manual" class="section hidden">
+    <div class="card">
+      <div class="card-label">📖 ¿CÓMO USAR ESTA APP?</div>
+
+      <div class="manual-step">
+        <div class="ms-num">1</div>
+        <div class="ms-body">
+          <strong>Selecciona un medicamento rápido</strong> tocando una de las tarjetas de acceso rápido, o ingresa los datos manualmente.
+        </div>
+      </div>
+      <div class="manual-step">
+        <div class="ms-num">2</div>
+        <div class="ms-body">
+          <strong>Ingresa la concentración en %</strong> y el volumen en mL de la presentación que tienes disponible.
+        </div>
+      </div>
+      <div class="manual-step">
+        <div class="ms-num">3</div>
+        <div class="ms-body">
+          <strong>Presiona CALCULAR</strong> para obtener el desgreso completo con el procedimiento paso a paso.
+        </div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-title">🔢 FÓRMULA BASE</div>
+        <div class="formula-line"><span class="mono">X% = X g / 100 mL</span></div>
+        <div class="formula-line"><span class="mono">mg/mL = (% × 1000) ÷ 100</span></div>
+        <div class="formula-line"><span class="mono">mg totales = mg/mL × Vol(mL)</span></div>
+        <div class="formula-line"><span class="mono">g totales = mg totales ÷ 1000</span></div>
+      </div>
+
+      <div class="formula-box ejemplo-box">
+        <div class="formula-title">💡 EJEMPLO — Gluconato de Calcio 10% / 10 mL</div>
+        <div class="formula-line">10% = 10 g en 100 mL</div>
+        <div class="formula-line">10 g ÷ 100 mL = <span class="cyan">100 mg/mL</span></div>
+        <div class="formula-line">100 mg/mL × 10 mL = <span class="cyan">1000 mg</span></div>
+        <div class="formula-line res-line">✅ Contiene <strong>1 g</strong> en 10 mL</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">ℹ️ ACERCA DE</div>
+      <p class="about-text">
+        <strong>MediShort360 · Conversor %→g</strong><br/>
+        Herramienta educativa para estudiantes y profesionales de enfermería.<br/><br/>
+        Diseñada para aprender a interpretar presentaciones farmacológicas expresadas en porcentaje.
+      </p>
+      <p class="about-canal">📺 <strong>Canal MEDISHORT360</strong> · Canal Médico Educativo</p>
+    </div>
+
+    <div class="aviso-card">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-text">
+        <strong>Herramienta educativa.</strong> Siempre verificar la prescripción médica, protocolos institucionales y presentación comercial antes de administrar medicamentos.
+      </div>
+    </div>
+    <div class="nota-final">
+      <strong>Importante:</strong> el contenido total depende de los mL de la presentación.
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="app-footer">
+    <span>🩺 MEDISHORT360 · Canal Médico Educativo</span>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
+
+</body>
+</html>
