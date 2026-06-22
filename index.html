@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0f1d" />
+  <title>MS360 Enfermería</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <link rel="stylesheet" href="./menu.css" />
+
+  <!-- ═══ ESTILOS DEL GATE DE ACTIVACIÓN (app maestra) ═══ -->
+  <style>
+    #maestra-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: radial-gradient(120% 90% at 50% -10%, #0f1729 0%, #0a0f1d 60%, #060912 100%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      animation: maestraFadeIn 0.4s ease;
+    }
+
+    @keyframes maestraFadeIn {
+      from { opacity: 0; transform: scale(1.02); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .maestra-card {
+      width: 100%;
+      max-width: 380px;
+      background: #131c31;
+      border: 1px solid #22314d;
+      border-radius: 20px;
+      padding: 34px 26px 28px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(25,118,210,0.12), 0 18px 50px rgba(0,0,0,0.55);
+    }
+
+    .maestra-logo-wrap {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+    }
+    .maestra-logo-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(#1976d2, #00cae0, #fff, #42a5f5, #1976d2);
+      animation: maestraSpin 5s linear infinite;
+      opacity: 0.9;
+    }
+    .maestra-logo {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      object-fit: cover;
+      position: relative;
+      display: block;
+      border: 3px solid #0a0f1d;
+    }
+    @keyframes maestraSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .maestra-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #e8eef5;
+      letter-spacing: 0.4px;
+      margin: 0 0 3px;
+    }
+    .maestra-title span { color: #42a5f5; font-weight: 400; }
+
+    .maestra-sub {
+      font-size: 13px;
+      color: #8499b5;
+      margin: 0 0 26px;
+      line-height: 1.5;
+    }
+
+    .maestra-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8499b5;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+
+    #maestra-input {
+      width: 100%;
+      background: #0f1729;
+      border: 1.5px solid #22314d;
+      border-radius: 10px;
+      color: #00cae0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-align: center;
+      padding: 13px 14px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #maestra-input:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.18);
+    }
+    #maestra-input::placeholder {
+      color: #3a4a68;
+      letter-spacing: 2px;
+      font-size: 0.9rem;
+    }
+
+    @keyframes maestraShake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-6px); }
+      40%     { transform: translateX(6px); }
+      60%     { transform: translateX(-4px); }
+      80%     { transform: translateX(4px); }
+    }
+    #maestra-input.shake {
+      animation: maestraShake 0.4s ease;
+      border-color: #ff6b81;
+      box-shadow: 0 0 0 3px rgba(255,107,129,0.15);
+    }
+
+    #maestra-error {
+      font-size: 12.5px;
+      color: #ff6b81;
+      margin: 9px 0 0;
+      min-height: 17px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-weight: 600;
+    }
+    #maestra-error.visible { opacity: 1; }
+
+    #maestra-btn {
+      width: 100%;
+      margin-top: 18px;
+      padding: 14px;
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      border: none;
+      border-radius: 11px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.12s;
+    }
+    #maestra-btn:active:not(:disabled) { transform: scale(0.98); }
+    #maestra-btn:disabled { opacity: 0.55; cursor: progress; }
+
+    .maestra-footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #5a6e8c;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════
+       PANTALLA DE ACTIVACIÓN — bloquea TODA la app maestra
+       Se muestra primero. Una vez activada, no vuelve a salir
+       en este dispositivo (localStorage).
+  ═══════════════════════════════════════════════════ -->
+  <div id="maestra-gate">
+    <div class="maestra-card">
+      <div class="maestra-logo-wrap">
+        <span class="maestra-logo-ring"></span>
+        <img src="icons/logo-canal.png" alt="MEDISHORT360" class="maestra-logo" />
+      </div>
+      <h2 class="maestra-title">MS360 <span>Enfermería</span></h2>
+      <p class="maestra-sub">Ingresa tu código de activación para acceder a las calculadoras.</p>
+
+      <label class="maestra-label" for="maestra-input">Código de activación</label>
+      <input
+        type="text"
+        id="maestra-input"
+        maxlength="40"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        placeholder="XXXX-XXXX-XXXX"
+      />
+      <div id="maestra-error"></div>
+
+      <button id="maestra-btn">Activar</button>
+
+      <div class="maestra-footer">
+        📺 Canal MEDISHORT360 · Calculadoras clínicas<br/>
+        La activación se guarda en este dispositivo
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ APP ORIGINAL (sin modificar) ══════════════ -->
+
+  <!-- DISCLAIMER PRIMER ARRANQUE -->
+  <div class="disclaimer-overlay" id="disclaimer" hidden>
+    <div class="disclaimer-card">
+      <div class="disclaimer-logo">
+        <img src="icons/logo-canal.png" alt="MEDISHORT360" />
+      </div>
+      <h2 class="disclaimer-title">Antes de comenzar</h2>
+      <div class="disclaimer-body">
+        <p><strong>MS360 Enfermería es una herramienta educativa y de apoyo al aprendizaje.</strong></p>
+        <p>No es un dispositivo médico y no diagnostica, trata, cura ni previene ninguna condición médica. La aplicación no genera indicaciones ni prescripciones.</p>
+        <p>Todos los resultados son cálculos orientativos que deben ser <strong>verificados por un profesional de la salud cualificado</strong> antes de cualquier uso real. Para decisiones clínicas, consulta siempre a un profesional.</p>
+        <p>El uso de esta herramienta y de sus resultados es responsabilidad exclusiva de quien la utiliza.</p>
+      </div>
+      <label class="disclaimer-check">
+        <input type="checkbox" id="disclaimer-accept-check" />
+        <span>He leído y entiendo que esta es una herramienta educativa que no sustituye el criterio clínico profesional.</span>
+      </label>
+      <button class="disclaimer-btn" id="disclaimer-btn" disabled>Aceptar y continuar</button>
+      <div class="disclaimer-links">
+        <a href="privacidad/index.html" target="_blank">Política de privacidad</a>
+        <span>·</span>
+        <a href="terminos/index.html" target="_blank">Términos de servicio</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="menu" id="menu">
+
+    <header class="brand">
+      <div class="brand-mark">
+        <span class="logo-ring-spin"></span>
+        <span class="logo-ring-pulse"></span>
+        <img src="icons/logo-canal.png" alt="MEDISHORT360" class="brand-logo" />
+      </div>
+      <h1 class="brand-title">MS360 <span>Enfermería</span></h1>
+      <p class="brand-sub">Calculadoras clínicas · MEDISHORT360</p>
+    </header>
+
+    <section class="grid" aria-label="Calculadoras disponibles">
+
+      <!-- GRATIS: Porcentaje -->
+      <button class="tool" data-app="porcentaje" style="--c:#1976d2">
+        <span class="tool-icon">💉</span>
+        <span class="tool-body">
+          <span class="tool-name">Conversión de %</span>
+          <span class="tool-desc">Porcentaje a mg/mL y dosis</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- GRATIS: Dosis y Flujo -->
+      <button class="tool" data-app="dosisflujo" style="--c:#00cae0">
+        <span class="tool-icon">💧</span>
+        <span class="tool-body">
+          <span class="tool-name">Dosis y Goteo</span>
+          <span class="tool-desc">Dosis en mL · goteo · flujo IV</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- PREMIUM: ASPA -->
+      <button class="tool locked" data-app="aspa" data-premium="1" style="--c:#42a5f5">
+        <span class="tool-icon">⚗️</span>
+        <span class="tool-body">
+          <span class="tool-name">Regla del Aspa <span class="badge-pro">PRO</span></span>
+          <span class="tool-desc">Diluciones por concentración</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+      <!-- PREMIUM: UCI -->
+      <button class="tool locked" data-app="uci" data-premium="1" style="--c:#5e9be6">
+        <span class="tool-icon">🫀</span>
+        <span class="tool-body">
+          <span class="tool-name">UCI: Balance + Antropometría <span class="badge-pro">PRO</span></span>
+          <span class="tool-desc">Balance hídrico y cálculos antropométricos</span>
+        </span>
+        <span class="tool-go">›</span>
+      </button>
+
+    </section>
+
+    <footer class="menu-foot">
+      <button class="foot-link" id="open-privacy">Política de privacidad</button>
+      <span class="foot-sep">·</span>
+      <button class="foot-link" id="open-terms">Términos</button>
+      <span class="foot-sep">·</span>
+      <button class="foot-link" id="open-about">Acerca de</button>
+      <p class="foot-disclaimer">Herramienta educativa de apoyo. No sustituye el criterio clínico profesional.</p>
+    </footer>
+
+  </main>
+
+  <!-- VISTA DE CALCULADORA (iframe aislado) -->
+  <section class="viewer" id="viewer" hidden>
+    <header class="viewer-bar">
+      <button class="back-btn" id="back-btn">‹ Inicio</button>
+      <span class="viewer-title" id="viewer-title">—</span>
+      <span class="viewer-spacer"></span>
+    </header>
+    <iframe class="viewer-frame" id="viewer-frame" title="Calculadora" referrerpolicy="no-referrer"></iframe>
+  </section>
+
+  <script src="./menu.js"></script>
+
+  <!-- Script de activación Firebase (módulo ES) -->
+  <script type="module" src="./activacion.js"></script>
+</body>
+</html>
