@@ -1,5 +1,7 @@
 // ===== activacion.js · MS360 Enfermería (App Maestra) =====
-// Un código = un dispositivo. Bloquea TODA la app hasta activar.
+// Un código = un dispositivo.
+// La app abre libre: las calculadoras gratuitas se usan sin código.
+// El gate solo aparece cuando se intenta abrir una calculadora PRO.
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, doc, getDoc, updateDoc }
@@ -99,13 +101,30 @@ function marcarActivado(codigo) {
   localStorage.setItem(LS_CODE_KEY, codigo);
 }
 
+// El gate ya no se elimina del DOM: se oculta, porque puede volver a
+// abrirse si el usuario toca otra calculadora PRO sin haber activado.
 function ocultarGate() {
   const gate = document.getElementById('maestra-gate');
-  if (gate) {
-    gate.style.opacity = '0';
-    gate.style.transition = 'opacity 0.5s ease';
-    setTimeout(() => gate.remove(), 500);
-  }
+  if (!gate) return;
+  gate.style.opacity = '0';
+  gate.style.transition = 'opacity 0.4s ease';
+  setTimeout(() => {
+    gate.style.display = 'none';
+    gate.style.opacity = '';
+    gate.style.transition = '';
+  }, 400);
+}
+
+function abrirGate() {
+  const gate = document.getElementById('maestra-gate');
+  if (!gate) return;
+  const btn = document.getElementById('maestra-btn');
+  const input = document.getElementById('maestra-input');
+  const errEl = document.getElementById('maestra-error');
+  if (btn) { btn.disabled = false; btn.textContent = 'Activar'; }
+  if (errEl) { errEl.textContent = ''; errEl.classList.remove('visible'); }
+  gate.style.display = 'flex';
+  if (input) setTimeout(() => input.focus(), 250);
 }
 
 function mostrarError(msg) {
@@ -136,7 +155,11 @@ async function intentarActivar() {
     if (resultado.valido) {
       marcarActivado(codigo.toUpperCase());
       btn.textContent = '✅ ¡Activado!';
-      setTimeout(ocultarGate, 700);
+      setTimeout(() => {
+        ocultarGate();
+        // Avisar al menú para que abra la calculadora PRO que se pidió.
+        if (typeof window.MS360_onActivado === 'function') window.MS360_onActivado();
+      }, 700);
     } else {
       const mensajes = {
         no_encontrado:    'Código inválido. Verifica e intenta de nuevo.',
@@ -156,19 +179,22 @@ async function intentarActivar() {
   }
 }
 
+// API para el menú: consultar estado y abrir el gate bajo demanda.
+window.MS360Activacion = {
+  activado: yaActivado,
+  abrir:    abrirGate,
+  cerrar:   ocultarGate,
+};
+
 // ——— Inicializar al cargar ———
+// La app NO se bloquea: el gate arranca oculto y solo se abre desde menu.js
+// cuando el usuario intenta entrar a una calculadora PRO sin activar.
 document.addEventListener('DOMContentLoaded', () => {
-  if (yaActivado()) {
-    const gate = document.getElementById('maestra-gate');
-    if (gate) gate.remove();
-    return;
-  }
-
-  const gate = document.getElementById('maestra-gate');
-  if (gate) gate.style.display = 'flex';
-
   const btn   = document.getElementById('maestra-btn');
   const input = document.getElementById('maestra-input');
+  const cerrar = document.getElementById('maestra-cerrar');
+
+  if (cerrar) cerrar.addEventListener('click', ocultarGate);
 
   if (btn)   btn.addEventListener('click', intentarActivar);
   if (input) {
