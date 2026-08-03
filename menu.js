@@ -40,11 +40,16 @@ const viewerTitle = document.getElementById("viewer-title");
 const backBtn     = document.getElementById("back-btn");
 
 /* ---- ¿Premium desbloqueado? ----
-   NOTA: por ahora siempre devuelve true para poder probar la navegación.
-   Cuando integremos Google Play Billing, esta función consultará el
-   estado real de la compra. NO usar localStorage como única verdad. */
+   El estado real lo lleva activacion.js: el código se valida contra
+   Firestore y queda asociado a este dispositivo. */
 function premiumDesbloqueado() {
-  return true; // TODO: reemplazar por verificación real de Billing
+  try {
+    return window.MS360Activacion
+      ? window.MS360Activacion.activado()
+      : localStorage.getItem("ms360maestra_activado") === "1";
+  } catch (e) {
+    return false;
+  }
 }
 
 function abrirApp(key) {
@@ -70,8 +75,17 @@ function volverAlMenu() {
 }
 
 function mostrarPaywall(key) {
-  // Placeholder: se reemplazará por la pantalla real de compra ($2.99)
-  alert("Esta calculadora es PRO.\n\nPróximamente: desbloquear las 2 calculadoras PRO por una sola compra.");
+  // Al activar con un código válido, abrimos la calculadora que se pidió.
+  window.MS360_onActivado = () => {
+    window.MS360_onActivado = null;
+    abrirApp(key);
+  };
+
+  if (window.MS360Activacion) {
+    window.MS360Activacion.abrir();
+  } else {
+    alert("Esta calculadora es PRO. Necesitas un código de activación.");
+  }
 }
 
 /* ---- Eventos ---- */

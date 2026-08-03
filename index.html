@@ -166,6 +166,30 @@
     #maestra-btn:active:not(:disabled) { transform: scale(0.98); }
     #maestra-btn:disabled { opacity: 0.55; cursor: progress; }
 
+    .maestra-comprar {
+      display: block;
+      margin-top: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #42a5f5;
+      text-decoration: none;
+    }
+
+    .maestra-cerrar {
+      width: 100%;
+      margin-top: 14px;
+      padding: 11px;
+      background: transparent;
+      border: 1px solid #22314d;
+      border-radius: 11px;
+      color: #8ba0bd;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .maestra-cerrar:hover { border-color: #3a4a6b; color: #cfe0f5; }
+
     .maestra-footer {
       margin-top: 20px;
       font-size: 11px;
@@ -209,8 +233,8 @@
         <span class="maestra-logo-ring"></span>
         <img src="icons/logo-canal.png" alt="MEDISHORT360" class="maestra-logo" />
       </div>
-      <h2 class="maestra-title">MS360 <span>Enfermería</span></h2>
-      <p class="maestra-sub">Ingresa tu código de activación para acceder a las calculadoras.</p>
+      <h2 class="maestra-title">Calculadora <span>PRO</span></h2>
+      <p class="maestra-sub">Regla del Aspa y UCI son PRO. Desbloquéalas con tu código — un solo pago, de por vida.</p>
 
       <label class="maestra-label" for="maestra-input">Código de activación</label>
       <input
@@ -225,6 +249,12 @@
       <div id="maestra-error"></div>
 
       <button id="maestra-btn">Activar</button>
+
+      <a class="maestra-comprar"
+         href="https://wa.me/593986198167?text=Hola,%20quiero%20desbloquear%20las%20calculadoras%20PRO%20de%20MS360%20Enfermer%C3%ADa."
+         target="_blank" rel="noopener">¿No tienes código? Consíguelo aquí →</a>
+
+      <button id="maestra-cerrar" class="maestra-cerrar" type="button">Seguir con las calculadoras gratis</button>
 
       <div class="maestra-footer">
         📺 Canal MEDISHORT360 · Calculadoras clínicas<br/>
@@ -279,7 +309,7 @@
       <button class="tool" data-app="porcentaje" style="--c:#1976d2">
         <span class="tool-icon">💉</span>
         <span class="tool-body">
-          <span class="tool-name">Conversión de %</span>
+          <span class="tool-name">Conversión de % <span class="badge-free">GRATIS</span></span>
           <span class="tool-desc">Porcentaje a mg/mL y dosis</span>
         </span>
         <span class="tool-go">›</span>
@@ -289,7 +319,7 @@
       <button class="tool" data-app="dosisflujo" style="--c:#00cae0">
         <span class="tool-icon">💧</span>
         <span class="tool-body">
-          <span class="tool-name">Dosis y Goteo</span>
+          <span class="tool-name">Dosis y Goteo <span class="badge-free">GRATIS</span></span>
           <span class="tool-desc">Dosis en mL · goteo · flujo IV</span>
         </span>
         <span class="tool-go">›</span>
